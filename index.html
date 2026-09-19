@@ -3,58 +3,1003 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Allen's Notes Vault — Study Squad</title>
-  <meta name="description" content="100% Free Notes, Anonymous Confessions & Study Resources for Friends.">
+  <title>Allen's Notes Vault — Samar Aditya | Study Squad</title>
+  <meta name="description" content="Official Notes Vault & Anonymous Confessions for Allen Students: Handwritten Notes, Formula Sheets, Chapter Summaries & Anonymous Secret Vault. 100% Free.">
+  <link rel="icon" type="image/svg+xml" href="https://thedarkxh.github.io/favicon.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #090d16;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    :root {
+      --bg-dark: #050403;
+      --glass-bg: rgba(16, 12, 10, 0.78);
+      --glass-bg-hover: rgba(26, 20, 16, 0.92);
+      --glass-border: rgba(217, 119, 6, 0.22);
+      --glass-border-glow: rgba(245, 158, 11, 0.55);
+      
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      
+      --accent-primary: #d97706; /* Gold/Amber */
+      --accent-primary-rgb: 217, 119, 6;
+      --accent-secondary: #ea580c; /* Orange/Bronze */
+      --accent-secondary-rgb: 234, 88, 12;
+      --accent-gold: #fbbf24;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+
+      --gradient-primary: linear-gradient(135deg, #f59e0b, #d97706, #ea580c);
+      --gradient-hover: linear-gradient(135deg, #fbbf24, #f59e0b, #ea580c);
+      --gradient-card: linear-gradient(135deg, rgba(24, 19, 16, 0.85), rgba(10, 8, 7, 0.94));
+
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .fallback-bar {
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(217, 119, 6, 0.1), transparent 45%),
+        radial-gradient(circle at 88% 82%, rgba(234, 88, 12, 0.08), transparent 45%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px;
+    }
+
+    /* Interactive Canvas & Noise Overlay */
+    #canvas-4d {
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
-      right: 0;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(8px);
-      color: #94a3b8;
-      text-align: center;
-      padding: 8px 16px;
-      font-size: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      z-index: 100;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      width: 0%;
+      z-index: 10001;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.9);
+      transition: width 0.1s ease-out;
+    }
+
+    /* Floating Navbar HUD */
+    .navbar-hud {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 860px;
+      background: rgba(14, 10, 8, 0.82);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: 9999px;
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 119, 6, 0.1);
     }
-    .fallback-bar a {
-      color: #818cf8;
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
-      font-weight: 500;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
     }
-    .fallback-bar a:hover {
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: rgba(217, 119, 6, 0.12);
+    }
+
+    .nav-btn-primary {
+      background: var(--gradient-primary);
+      color: #050403 !important;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+    }
+
+    .nav-btn-primary:hover {
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 640px;
+      padding: 20px 16px 60px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(217, 119, 6, 0.12);
+      border: 1px solid rgba(217, 119, 6, 0.32);
+      color: var(--accent-gold);
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.15rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 30%, #fbbf24 75%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Google Drive Banner HUD */
+    .drive-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gradient-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 119, 6, 0.1);
+    }
+
+    .drive-banner:hover {
+      border-color: var(--glass-border-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.3);
+    }
+
+    .drive-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .drive-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(217, 119, 6, 0.15);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 1.35rem;
+    }
+
+    .drive-title {
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .drive-sub {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .drive-btn {
+      background: var(--gradient-primary);
+      color: #050403;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 10px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .drive-banner:hover .drive-btn {
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Tabs Bar */
+    .tabs {
+      display: flex;
+      background: rgba(16, 12, 10, 0.85);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 5px;
+      margin-bottom: 22px;
+      gap: 4px;
+      backdrop-filter: blur(12px);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 11px 10px;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.86rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(217, 119, 6, 0.08);
+    }
+
+    .tab-btn.active {
+      background: var(--gradient-primary);
+      color: #050403;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .tab-btn.active.confess-tab {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.45);
+    }
+
+    .tab-btn.active.grill-tab {
+      background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(234, 88, 12, 0.45);
+    }
+
+    /* Card Box */
+    .card {
+      background: var(--gradient-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 26px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 119, 6, 0.06);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      letter-spacing: 0.3px;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 13px 15px;
+      background: rgba(12, 9, 8, 0.78);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select option {
+      background: #0d0a08;
+      color: #fff;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+    }
+
+    /* Dropzone */
+    .dropzone {
+      border: 2px dashed rgba(217, 119, 6, 0.4);
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      background: rgba(217, 119, 6, 0.03);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dropzone:hover {
+      border-color: var(--accent-gold);
+      background: rgba(217, 119, 6, 0.08);
+    }
+
+    .dropzone-icon {
+      font-size: 2.2rem;
+      color: var(--accent-gold);
+      margin-bottom: 10px;
+    }
+
+    .dropzone strong {
+      display: block;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .dropzone p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .selected-files {
+      margin-top: 12px;
+      font-size: 0.86rem;
+      color: var(--accent-gold);
+      font-family: var(--font-mono);
+    }
+
+    /* Buttons */
+    button[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      background: var(--gradient-primary);
+      color: #050403;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.55);
+    }
+
+    .confess-btn {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4) !important;
+    }
+
+    .confess-btn:hover {
+      box-shadow: 0 6px 25px rgba(168, 85, 247, 0.6) !important;
+    }
+
+    .grill-btn {
+      background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4) !important;
+    }
+
+    .grill-btn:hover {
+      box-shadow: 0 6px 25px rgba(234, 88, 12, 0.6) !important;
+    }
+
+    /* Privacy Banner */
+    .privacy-notice {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 0.85rem;
+      color: #d8b4fe;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 13px 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      font-family: var(--font-mono);
+      display: none;
+      line-height: 1.5;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 36px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    footer a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <iframe id="portal-frame" src="https://hill-jeff-kits-pathology.trycloudflare.com" allow="clipboard-write"></iframe>
-  <div class="fallback-bar">
-    <span>📱 <b>Allen's Notes Vault</b> &bull; Hosted Live on Termux Phone</span>
-    <div style="display: flex; gap: 14px; align-items: center;">
-      <a href="https://drive.google.com/drive/folders/10lJgUP-16maAXccQ8bOM4kZtXASpu280?usp=drive_link" target="_blank" style="color: #38bdf8; font-weight: 600;">📁 Open Google Drive</a>
-      <a href="https://hill-jeff-kits-pathology.trycloudflare.com" target="_blank">Direct Portal &rarr;</a>
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Cosmic Canvas & Texture -->
+  <canvas id="canvas-4d"></canvas>
+  <div class="noise-overlay"></div>
+
+  <!-- Floating HUD Navbar -->
+  <nav class="navbar-hud">
+    <a href="#" class="nav-brand">
+      <span class="pulse-dot"></span>
+      <span>ALLEN VAULT</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://thedarkxh.github.io" target="_blank" class="nav-btn">
+        <i class="fa-solid fa-code"></i> Samar's Portfolio
+      </a>
+      <a href="https://drive.google.com/drive/folders/10lJgUP-16maAXccQ8bOM4kZtXASpu280?usp=drive_link" target="_blank" class="nav-btn nav-btn-primary">
+        <i class="fa-brands fa-google-drive"></i> Open Drive
+      </a>
     </div>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="badge">
+        <span class="pulse-dot"></span>
+        <span>VAULT ARCHITECTURE // 100% FREE STUDY SQUAD</span>
+      </div>
+      <h1>Allen's Notes Vault</h1>
+      <p>Handwritten Notes, Formula Summaries, Anonymous Confessions & Direct Vault Access for Friends.</p>
+    </header>
+
+    <!-- GOOGLE DRIVE QUICK ACCESS CARD -->
+    <a href="https://drive.google.com/drive/folders/10lJgUP-16maAXccQ8bOM4kZtXASpu280?usp=drive_link" target="_blank" class="drive-banner">
+      <div class="drive-banner-left">
+        <div class="drive-icon">
+          <i class="fa-brands fa-google-drive"></i>
+        </div>
+        <div>
+          <div class="drive-title">Open Google Drive Vault 🚀</div>
+          <div class="drive-sub">Physics, Chemistry, Math notes, formula sheets & solved questions</div>
+        </div>
+      </div>
+      <div class="drive-btn">
+        <span>Open Drive</span>
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </div>
+    </a>
+
+    <!-- NAVIGATION TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('upload')">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Notes
+      </button>
+      <button class="tab-btn confess-tab" onclick="switchTab('confess')">
+        <i class="fa-solid fa-mask"></i> Confessions
+      </button>
+      <button class="tab-btn grill-tab" onclick="switchTab('grill')">
+        <i class="fa-solid fa-fire"></i> Grill Me
+      </button>
+    </div>
+
+    <!-- TAB 1: UPLOAD NOTES -->
+    <div id="upload-panel" class="card">
+      <form id="upload-form" onsubmit="handleUpload(event)">
+        <div class="form-group">
+          <label>Your Name or Instagram Handle (Optional)</label>
+          <input type="text" id="uploader" placeholder="@your_handle or nickname">
+        </div>
+
+        <div class="form-group">
+          <label>Subject & Chapter / Topic Title *</label>
+          <input type="text" id="subject" placeholder="e.g. Physics - Ray Optics Formulas" required>
+        </div>
+
+        <div class="form-group">
+          <label>Select File(s) to Upload *</label>
+          <div class="dropzone" onclick="document.getElementById('file-input').click()">
+            <div class="dropzone-icon">
+              <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+            <strong>Click or tap to choose files</strong>
+            <p>PDFs, handwritten page photos, images, Word docs, or ZIP</p>
+            <input type="file" id="file-input" style="display: none;" multiple required onchange="updateFileList()">
+          </div>
+          <div id="file-list" class="selected-files"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Extra Note / Description (Optional)</label>
+          <input type="text" id="note-desc" placeholder="e.g. Solved question 4 included, class notes from Monday">
+        </div>
+
+        <button type="submit" id="upload-submit-btn">
+          <i class="fa-solid fa-paper-plane"></i> Submit Notes to Vault
+        </button>
+      </form>
+      <div id="upload-alert" class="alert"></div>
+    </div>
+
+    <!-- TAB 2: ANONYMOUS CONFESSIONS -->
+    <div id="confess-panel" class="card" style="display: none;">
+      <div class="privacy-notice">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span><strong>100% Anonymous:</strong> Zero trackers, no identity logged. Your secret is safely locked in the vault.</span>
+      </div>
+      <form id="confess-form" onsubmit="handleConfess(event)">
+        <div class="form-group">
+          <label>Category (Optional)</label>
+          <select id="confess-category">
+            <option value="">✨ Auto-Detect Category</option>
+            <option value="❤️ Secret Crush">❤️ Secret Crush</option>
+            <option value="☕ Campus Tea & Drama">☕ Campus Tea & Drama</option>
+            <option value="📚 Exam & Study Stress">📚 Exam & Study Stress</option>
+            <option value="😂 Funny & Relatable">😂 Funny & Relatable</option>
+            <option value="🔥 Unfiltered Secret">🔥 Unfiltered Secret</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Your Secret Confession *</label>
+          <textarea id="confess-text" rows="5" placeholder="Speak your mind freely... secret crushes, campus tea, exam stress, or things you can never say out loud. Nobody will ever know it was you 🤫" required></textarea>
+        </div>
+
+        <button type="submit" class="confess-btn" id="confess-submit-btn">
+          <i class="fa-solid fa-user-secret"></i> Drop Secret Confession into Vault
+        </button>
+      </form>
+      <div id="confess-alert" class="alert"></div>
+    </div>
+
+    <!-- TAB 3: GRILL ME & SUGGESTIONS -->
+    <div id="grill-panel" class="card" style="display: none;">
+      <form id="grill-form" onsubmit="handleGrill(event)">
+        <div class="form-group">
+          <label>Your Name / IG Handle (Leave blank to stay anonymous 🕵️)</label>
+          <input type="text" id="grill-name" placeholder="Anonymous or @handle">
+        </div>
+
+        <div class="form-group">
+          <label>Grill Me / Suggestions / What's Missing? 🔥</label>
+          <textarea id="grill-text" rows="5" placeholder="Be completely honest: What notes are missing? How can the explanations be better? Roast my handwriting or suggest anything!" required></textarea>
+        </div>
+
+        <button type="submit" class="grill-btn" id="grill-submit-btn">
+          <i class="fa-solid fa-fire-flame-curved"></i> Send Feedback / Grill Me
+        </button>
+      </form>
+      <div id="grill-alert" class="alert"></div>
+    </div>
+
+    <footer>
+      <div>Crafted & Maintained by <a href="https://thedarkxh.github.io" target="_blank">Samar Aditya</a></div>
+      <div>100% Free Study Vault for Allen Friends • <a href="https://instagram.com/tear.diaries.allen" target="_blank">@tear.diaries.allen</a></div>
+    </footer>
   </div>
+
+  <script>
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scroll-progress').style.width = scrolled + '%';
+    });
+
+    // Interactive 4D Canvas Starfield & Nebula Animation
+    const canvas = document.getElementById('canvas-4d');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let stars = [];
+    let nebulaClouds = [];
+
+    function initSpace() {
+      stars = [];
+      nebulaClouds = [];
+      const count = 160;
+      for (let i = 0; i < count; i++) {
+        let radius = Math.random() * (width * 0.7);
+        stars.push({
+          angle: Math.random() * Math.PI * 2,
+          radius: radius,
+          speed: (Math.random() * 0.0015 + 0.0005),
+          size: Math.random() * 1.5 + 0.5,
+          color: Math.random() > 0.7 ? 'rgba(217, 119, 6, ' : 'rgba(255, 255, 255, ',
+          alpha: Math.random() * 0.5 + 0.1
+        });
+      }
+
+      for (let i = 0; i < 18; i++) {
+        nebulaClouds.push({
+          angle: Math.random() * Math.PI * 2,
+          radius: 90 + i * 15,
+          speed: 0.0003 + (i * 0.00004),
+          size: 140 + Math.random() * 180,
+          color: i % 2 === 0 ? 'rgba(217, 119, 6, ' : 'rgba(234, 88, 12, ',
+          alpha: 0.07 - (i * 0.002)
+        });
+      }
+    }
+    initSpace();
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      for (let cloud of nebulaClouds) {
+        cloud.angle += cloud.speed;
+        let cx = centerX + Math.cos(cloud.angle) * cloud.radius;
+        let cy = centerY + Math.sin(cloud.angle) * cloud.radius;
+        let grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, cloud.size);
+        grad.addColorStop(0, cloud.color + cloud.alpha + ')');
+        grad.addColorStop(1, cloud.color + '0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, cloud.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let star of stars) {
+        star.angle += star.speed;
+        let sx = centerX + Math.cos(star.angle) * star.radius;
+        let sy = centerY + Math.sin(star.angle) * star.radius;
+        ctx.fillStyle = star.color + star.alpha + ')';
+        ctx.beginPath();
+        ctx.arc(sx, sy, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    // Tab Switching
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('upload-panel').style.display = 'none';
+      document.getElementById('confess-panel').style.display = 'none';
+      document.getElementById('grill-panel').style.display = 'none';
+
+      if (tab === 'upload') {
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('upload-panel').style.display = 'block';
+      } else if (tab === 'confess') {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+        document.getElementById('confess-panel').style.display = 'block';
+      } else {
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+        document.getElementById('grill-panel').style.display = 'block';
+      }
+    }
+
+    function updateFileList() {
+      const input = document.getElementById('file-input');
+      const list = document.getElementById('file-list');
+      if (input.files.length > 0) {
+        const names = Array.from(input.files).map(f => f.name).join(', ');
+        list.innerText = `Selected ${input.files.length} file(s): ${names}`;
+      } else {
+        list.innerText = '';
+      }
+    }
+
+    // Direct Google Apps Script Staging Endpoint
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7VgMtc2_ADOXEDlgzsJ443-lRSZzG8pSv_bgWPvW9nnZ4CKyOBVXJRKl3wI32qo33sw/exec";
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+          if ((encoded.length % 4) > 0) {
+            encoded += '='.repeat(4 - (encoded.length % 4));
+          }
+          resolve(encoded);
+        };
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    async function handleUpload(e) {
+      e.preventDefault();
+      const btn = document.getElementById('upload-submit-btn');
+      const alert = document.getElementById('upload-alert');
+      const files = document.getElementById('file-input').files;
+      const subject = document.getElementById('subject').value.trim();
+      const uploader = document.getElementById('uploader').value.trim() || 'Anonymous Friend';
+      const desc = document.getElementById('note-desc').value.trim();
+
+      if (files.length === 0) {
+        alert.className = 'alert alert-error';
+        alert.innerText = 'Please select at least one file!';
+        alert.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading to Staging Vault...';
+      alert.style.display = 'none';
+
+      try {
+        let uploadedCount = 0;
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const b64Data = await fileToBase64(file);
+          const payload = {
+            fileName: file.name,
+            mimeType: file.type || 'application/octet-stream',
+            fileData: b64Data,
+            uploader: uploader,
+            subject: subject,
+            description: desc
+          };
+
+          await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          uploadedCount++;
+        }
+
+        alert.className = 'alert alert-success';
+        alert.innerText = '🎉 Success! Your notes have been submitted to the Staging Vault for verification.';
+        alert.style.display = 'block';
+        document.getElementById('upload-form').reset();
+        document.getElementById('file-list').innerText = '';
+      } catch (err) {
+        alert.className = 'alert alert-error';
+        alert.innerText = '⚠️ Upload error: ' + err.message;
+        alert.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Notes to Vault';
+      }
+    }
+
+    async function handleConfess(e) {
+      e.preventDefault();
+      const btn = document.getElementById('confess-submit-btn');
+      const alert = document.getElementById('confess-alert');
+      const text = document.getElementById('confess-text').value.trim();
+      const category = document.getElementById('confess-category').value || 'Unfiltered';
+
+      if (!text) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Encrypting & Locking...';
+      alert.style.display = 'none';
+
+      try {
+        const payload = {
+          fileName: `Confession_${Date.now()}.txt`,
+          mimeType: 'text/plain',
+          fileData: btoa(unescape(encodeURIComponent(`Category: ${category}\nTime: ${new Date().toISOString()}\n\nConfession:\n${text}`))),
+          uploader: 'Anonymous',
+          subject: `Confession [${category}]`,
+          description: text
+        };
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        alert.className = 'alert alert-success';
+        alert.innerText = '🤫 Your confession is locked into the vault with 100% anonymity.';
+        alert.style.display = 'block';
+        document.getElementById('confess-form').reset();
+      } catch (err) {
+        alert.className = 'alert alert-error';
+        alert.innerText = '⚠️ Error: ' + err.message;
+        alert.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-secret"></i> Drop Secret Confession into Vault';
+      }
+    }
+
+    async function handleGrill(e) {
+      e.preventDefault();
+      const btn = document.getElementById('grill-submit-btn');
+      const alert = document.getElementById('grill-alert');
+      const name = document.getElementById('grill-name').value.trim() || 'Anonymous Friend';
+      const message = document.getElementById('grill-text').value.trim();
+
+      if (!message) return;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+      alert.style.display = 'none';
+
+      try {
+        const payload = {
+          fileName: `Feedback_${Date.now()}.txt`,
+          mimeType: 'text/plain',
+          fileData: btoa(unescape(encodeURIComponent(`Sender: ${name}\nTime: ${new Date().toISOString()}\n\nFeedback:\n${message}`))),
+          uploader: name,
+          subject: 'Grill Feedback',
+          description: message
+        };
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        alert.className = 'alert alert-success';
+        alert.innerText = '🔥 Got it! Your honest roast / feedback has been delivered.';
+        alert.style.display = 'block';
+        document.getElementById('grill-form').reset();
+      } catch (err) {
+        alert.className = 'alert alert-error';
+        alert.innerText = '⚠️ Error: ' + err.message;
+        alert.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-fire-flame-curved"></i> Send Feedback / Grill Me';
+      }
+    }
+  </script>
 </body>
 </html>
